@@ -1,13 +1,18 @@
-import { Link } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import img from '../../assets/images/login/login.svg'
 import { useContext, useState } from 'react';
 import { authContext } from '../../Provider/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 const Login = () => {
     const auth=useContext(authContext)
+    const location=useLocation()
+    // console.log(location);
+    const from=location.state?.from?.pathname || '/'
     const {logIn}=auth
     const [success,setSuccess]=useState('');
     const [error,setError]=useState('');
+    const navigate=useNavigate()
     // console.log(logIn);
     const handleLOgin=(event)=>{
         setSuccess('')
@@ -19,10 +24,14 @@ const Login = () => {
         console.log(email,password);
         logIn(email,password)
         .then(result=>{
-            const loggedUser=result.user;
-            console.log(loggedUser);
+            const user=result.user;
+            console.log(user);
             setSuccess('successfully login');
             form.reset();
+            navigate(from,{replace:true})
+          
+        
+
 
         })
   .catch(error=>{
@@ -40,7 +49,7 @@ const Login = () => {
           <div className="card flex-shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
             <div className="card-body">
                 <h2 className='text-4xl font-bold text-center'>Login!</h2>
-           <form onSubmit={handleLOgin}>
+           <form onSubmit={handleLOgin} className=''>
            <div className="form-control">
                 <label className="label">
                   <span className="label-text">Email</span>
@@ -51,7 +60,7 @@ const Login = () => {
                 <label className="label">
                   <span className="label-text">Password</span>
                 </label>
-                <input type="text" name='password' placeholder="password" className="input input-bordered" />
+                <input type="password" name='password' placeholder="password" className="input input-bordered" />
                 <label className="label">
                   <a href="#" className="label-text-alt link link-hover">Forgot password?</a>
                 </label>
@@ -68,6 +77,7 @@ const Login = () => {
                 
                   <p className='text-green-600'>{success}</p>
                   <p className='text-red-600'>{error}</p>
+                  <SocialLogin></SocialLogin>
               </div>
           </div>
         </div>

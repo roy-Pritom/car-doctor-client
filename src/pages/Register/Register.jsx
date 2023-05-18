@@ -1,12 +1,14 @@
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import img from '../../assets/images/login/login.svg'
 import { useContext, useState } from 'react';
 import { authContext } from '../../Provider/AuthProvider';
+import SocialLogin from '../Shared/SocialLogin/SocialLogin';
 
 
 const Register = () => {
-    const auth=useContext(authContext)
-    const {createUser}=auth
+
+    const {createUser,logOut}=useContext(authContext)
+    const navigate=useNavigate();
     const [success,setSuccess]=useState('');
     const [error,setError]=useState('');
     const handleSignUp=(event)=>{
@@ -24,6 +26,9 @@ const Register = () => {
             console.log(loggedUser);
             setSuccess('successfully register')
             form.reset();
+            logOut();
+            navigate('/login')
+
         })
   .catch(error=>{
     setError(error.message)
@@ -73,6 +78,7 @@ const Register = () => {
                 
                 <p className='text-green-600'>{success}</p>
                 <p className='text-red-600'>{error}</p>
+                <SocialLogin></SocialLogin>
             </div>
           </div>
         </div>
